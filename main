@@ -1,0 +1,22 @@
+#include 
+
+int main() {
+    // Включаем экран
+    SDL_Init(SDL_INIT_VIDEO);
+
+    // Создаем окно (640 на 480) и кисть
+    SDL_Window* window = SDL_CreateWindow("Player", 0, 0, 640, 480, 0);
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
+
+    // Берем красную краску и заливаем экран
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    SDL_RenderClear(renderer);
+    SDL_RenderPresent(renderer);
+
+    // Ждем 5 секунд (5000 миллисекунд)
+    SDL_Delay(5000);
+
+    // Убираем за собой и выходим
+    SDL_Quit();
+    return 0;
+}
