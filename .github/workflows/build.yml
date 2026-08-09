@@ -7,7 +7,7 @@ jobs:
       - uses: actions/checkout@v4
       
       - name: Build with Docker
-        run: docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace ghcr.io/onionui/miyoomini-toolchain:latest arm-linux-gnueabihf-gcc main.c -o player -lSDL2
+        run: docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace ghcr.io/onionui/miyoomini-toolchain:latest bash -c "arm-linux-gnueabihf-gcc main.c -o player -I/arm-linux-gnueabihf/sysroot/usr/include/SDL2 -lSDL2"
         
       - name: Upload
         uses: actions/upload-artifact@v4
