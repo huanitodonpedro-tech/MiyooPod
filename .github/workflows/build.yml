@@ -1,24 +1,35 @@
-name: Build Player
-on: [push]
+name: Build MiyooPod
+
+on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
-
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Setup ARM Compiler & SDL2
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      - name: Install ARM cross-compiler
+        run: sudo apt-get update && sudo apt-get install -y gcc-arm-linux-gnueabihf
+
+      - name: Build
+        env:
+          CGO_ENABLED: 1
+          GOOS: linux
+          GOARCH: arm
+          GOARM: 7
+          CC: arm-linux-gnueabihf-gcc
         run: |
-          sudo dpkg --add-architecture armhf
-          sudo apt-get update
-          sudo apt-get install -y gcc-arm-linux-gnueabihf libsdl2-dev:armhf
+          go get github.com/hajimehoshi/go-mp3
+          go build -ldflags="-s -w" -o MiyooPod
 
-      - name: Build binary
-        run: arm-linux-gnueabihf-gcc main.c -o player -lSDL2
-
-      - name: Upload artifact
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: player-bin
-          path: player
+          name: MiyooPod-Binary
+          path: MiyooPod
